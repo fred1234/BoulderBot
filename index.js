@@ -1,9 +1,5 @@
-// heroku deployment - https://github.com/telegraf/telegraf/issues/363
-
-const express = require('express');
-const { Telegraf } = require('telegraf');
+const { Composer } = require('micro-bot');
 const WebSocket = require('ws');
-
 
 require('dotenv').config();
 
@@ -11,16 +7,6 @@ const token = process.env.BOT_TOKEN;
 if (token === undefined) {
   throw new Error('BOT_TOKEN must be provided!');
 }
-
-const expressApp = express();
-
-const port = process.env.PORT || 3000;
-expressApp.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-expressApp.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
 
 const url = 'wss://s-usc1c-nss-245.firebaseio.com/.ws?v=5&ns=coronow-2d6af';
 const msg = {
@@ -59,19 +45,21 @@ function getData() {
   });
 }
 
-const bot = new Telegraf(token);
+const bot = new Composer();
 
-bot.command('stats', async (ctx) => {try {
-  const response = await getData();
-  const parsedMessage = `Number of people: ${response} / 25`;
-  return ctx.reply(parsedMessage);
-} catch (error) {
-  console.log(error.message);
-  return ctx.reply('something went wrong :/');
-}
+bot.command('stats', async (ctx) => {
+  try {
+    const response = await getData();
+    const parsedMessage = `Number of people: ${response} / 25`;
+    return ctx.reply(parsedMessage);
+  } catch (error) {
+    console.err(error.message);
+    return ctx.reply('something went wrong :/');
+  }
 });
 
-bot.startPolling();
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+module.exports = bot;

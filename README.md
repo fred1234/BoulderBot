@@ -6,4 +6,6 @@ Get the #people for the boulder hall in Rapperswil
 npm install
 ```
 
-and set your Bot Token in `.env`
+and set your tokens in `.env`
+
+see https://github.com/telegraf/micro-bot#readme
