@@ -1,4 +1,11 @@
+const { Telegraf } = require('telegraf');
 const WebSocket = require('ws');
+require('dotenv').config();
+
+const token = process.env.BOT_TOKEN;
+if (token === undefined) {
+  throw new Error('BOT_TOKEN must be provided!');
+}
 
 const url = 'wss://s-usc1c-nss-245.firebaseio.com/.ws?v=5&ns=coronow-2d6af';
 const msg = {
@@ -10,7 +17,7 @@ const msg = {
   },
 };
 
-function connect() {
+function getData() {
   return new Promise((resolve, reject) => {
     const data = [];
     const socket = new WebSocket(url);
@@ -35,10 +42,16 @@ function connect() {
   });
 }
 
-connect()
-  .then((data) => {
-    console.log(`people: ${data.map((el) => el.b?.d.current).filter((el) => el)[0]}`);
-  })
-  .catch((err) => {
-    console.error(`ou ou: ${err.message}`);
-  });
+const bot = new Telegraf(token);
+
+bot.command('stats', async (ctx) => {
+  const response = await getData();
+  const parsedMessage = `Number of people: ${response.map((el) => el.b?.d.current).filter((el) => el)[0]}`;
+  return ctx.reply(parsedMessage);
+});
+
+bot.launch();
+
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
