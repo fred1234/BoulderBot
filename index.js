@@ -63,7 +63,7 @@ const bot = new Telegraf(token);
 
 bot.command('stats', async (ctx) => {try {
   const response = await getData();
-  const parsedMessage = `Number of people: ${response}`;
+  const parsedMessage = `Number of people: ${response} / 25`;
   return ctx.reply(parsedMessage);
 } catch (error) {
   console.log(error.message);
