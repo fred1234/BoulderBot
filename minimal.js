@@ -8,7 +8,7 @@ if (token === undefined) {
   throw new Error('BOT_TOKEN must be provided!');
 }
 
-const url = 'wss://s-usc1c-nss-245.firebaseio.com/.ws?v=5&ns=coronow-2d6af';
+const url = 'wss://s-usc1c-nss-244.firebaseio.com/.ws?v=5&ns=coronow-2d6af';
 const msg = {
   t: 'd',
   d: {
