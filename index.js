@@ -52,7 +52,8 @@ bot.command('stats', async (ctx) => {
     let response = await getData();
     if (!response) { response = '0'; }
     const parsedMessage = `Number of people: ${response} / 25`;
-    return ctx.reply(parsedMessage);
+    const bug = "Ich bi scho wieder kaputt 🙃"
+    return ctx.reply(bug);
   } catch (error) {
     console.err(error.message);
     return ctx.reply('something went wrong :/');
