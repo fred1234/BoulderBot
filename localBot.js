@@ -1,4 +1,4 @@
-const { Composer } = require('micro-bot');
+const { Telegraf } = require('telegraf');
 const { getData, getRandomQuote } = require('./getData');
 
 require('dotenv').config();
@@ -8,7 +8,7 @@ if (token === undefined) {
   throw new Error('BOT_TOKEN must be provided!');
 }
 
-const bot = new Composer();
+const bot = new Telegraf(token);
 
 bot.command('stats', async (ctx) => {
   try {
@@ -24,8 +24,8 @@ bot.command('stats', async (ctx) => {
   }
 });
 
+bot.launch();
+
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
-module.exports = bot;
