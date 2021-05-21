@@ -15,7 +15,7 @@ bot.command('stats', async (ctx) => {
     const response = await getData();
     const { text: quote, author } = getRandomQuote();
 
-    const parsedMessage = `Number of people: <pre language="scala">${response} / 25</pre>\n<i>${quote}</i> [${author}]`;
+    const parsedMessage = `Number of people: <pre language="scala">${response}/25</pre>\n<i>${quote}</i> [${author}]`;
 
     return ctx.replyWithHTML(parsedMessage);
   } catch (error) {
