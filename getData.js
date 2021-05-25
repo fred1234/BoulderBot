@@ -14,7 +14,7 @@ const msg = {
 function getData() {
   return new Promise((resolve, reject) => {
     const data = [];
-    let numPeople;
+    let numPeople = 0;
     const socket = new WebSocket(url);
     socket.onopen = () => {
       socket.send(JSON.stringify(msg));
@@ -24,7 +24,6 @@ function getData() {
       data.push(JSON.parse(event.data).d);
       if (data.length >= 3) {
         [numPeople] = data.map((el) => el.b?.d.current).filter((el) => el);
-        if (!numPeople) { numPeople = '0'; }
         socket.close();
       }
     };
