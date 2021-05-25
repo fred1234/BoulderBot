@@ -1,36 +1,16 @@
-const WebSocket = require('ws');
 const fs = require('fs');
+const fetch = require('node-fetch');
 
-const url = 'wss://coronow-2d6af.firebaseio.com/.ws?v=5&ns=coronow-2d6af';
-const msg = {
-  t: 'd',
-  d: {
-    r: 4,
-    a: 'q',
-    b: { p: '/data/1KN5NCz3HfQuXE8GZC3mPoXrwVq1', h: '' },
-  },
-};
+const url = 'https://www.startupuniverse.ch/api/1.1/de/counters/get/1KN5NCz3HfQuXE8GZC3mPoXrwVq1';
 
-function getData() {
-  return new Promise((resolve, reject) => {
-    const data = [];
-    let numPeople = 0;
-    const socket = new WebSocket(url);
-    socket.onopen = () => {
-      socket.send(JSON.stringify(msg));
-    };
-
-    socket.onmessage = (event) => {
-      data.push(JSON.parse(event.data).d);
-      if (data.length >= 3) {
-        [numPeople] = data.map((el) => el.b?.d.current).filter((el) => el);
-        socket.close();
-      }
-    };
-
-    socket.onclose = () => { resolve(numPeople); };
-    socket.onerror = (err) => { reject(err); };
-  });
+async function getData() {
+  let numPeople = 0;
+  let max = 25;
+  const res = await fetch(url);
+  const json = await res.json();
+  numPeople = json.response.data.counteritems[0].val;
+  max = json.response.data.max;
+  return { numPeople, max };
 }
 
 // by: https://forum.freecodecamp.org/t/free-api-inspirational-quotes-json-with-code-examples/311373
